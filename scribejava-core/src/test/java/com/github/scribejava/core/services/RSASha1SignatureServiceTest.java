@@ -55,7 +55,9 @@ public class RSASha1SignatureServiceTest {
             final KeyFactory fac = KeyFactory.getInstance("RSA");
             final PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(str));
             return fac.generatePrivate(privKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
     }

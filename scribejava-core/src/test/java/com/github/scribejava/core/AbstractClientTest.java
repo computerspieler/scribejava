@@ -69,9 +69,12 @@ public abstract class AbstractClientTest {
 
         final OAuthRequest request = new OAuthRequest(Verb.GET, baseUrl.toString());
 
-        try (Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS)) {
+		Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS);
+        try {
             assertEquals(expectedResponseBody, response.getBody());
-        }
+        } finally {
+			response.close();
+		}
 
         final RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("GET", recordedRequest.getMethod());
@@ -109,9 +112,12 @@ public abstract class AbstractClientTest {
         final HttpUrl baseUrl = server.url("/testUrl");
 
         final OAuthRequest request = new OAuthRequest(Verb.POST, baseUrl.toString());
-        try (Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS)) {
+        Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS);
+		try {
             assertEquals(expectedResponseBody, response.getBody());
-        }
+        } finally {
+			response.close();
+		}
 
         final RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("POST", recordedRequest.getMethod());
@@ -134,9 +140,12 @@ public abstract class AbstractClientTest {
 
         final OAuthRequest request = new OAuthRequest(Verb.POST, baseUrl.toString());
         request.setPayload(expectedRequestBody);
-        try (Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS)) {
+        Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS);
+        try{
             assertEquals(expectedResponseBody, response.getBody());
-        }
+        } finally {
+			response.close();
+		}
 
         final RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("POST", recordedRequest.getMethod());
@@ -161,9 +170,12 @@ public abstract class AbstractClientTest {
 
         final OAuthRequest request = new OAuthRequest(Verb.POST, baseUrl.toString());
         request.setPayload(expectedRequestBody.getBytes());
-        try (Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS)) {
+        Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS);
+        try{
             assertEquals(expectedResponseBody, response.getBody());
-        }
+        } finally {
+			response.close();
+		}
 
         final RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("POST", recordedRequest.getMethod());
@@ -188,9 +200,12 @@ public abstract class AbstractClientTest {
 
         final OAuthRequest request = new OAuthRequest(Verb.POST, baseUrl.toString());
         request.addBodyParameter(expectedRequestBodyParamName, expectedRequestBodyParamValue);
-        try (Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS)) {
+        Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS);
+        try{
             assertEquals(expectedResponseBody, response.getBody());
-        }
+        } finally {
+			response.close();
+		}
 
         final RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("POST", recordedRequest.getMethod());
@@ -211,9 +226,12 @@ public abstract class AbstractClientTest {
         final HttpUrl baseUrl = server.url("/testUrl");
 
         final OAuthRequest request = new OAuthRequest(Verb.GET, baseUrl.toString());
-        try (Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS)) {
+        Response response = oAuthService.execute(request, null).get(30, TimeUnit.SECONDS);
+        try{
             assertEquals(expectedResponseBody, StreamUtils.getStreamContents(response.getStream()));
-        }
+        } finally {
+			response.close();
+		}
 
         final RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("GET", recordedRequest.getMethod());
@@ -253,11 +271,14 @@ public abstract class AbstractClientTest {
         final OAuthRequest request = new OAuthRequest(Verb.GET, baseUrl.toString());
 
         final TestCallback callback = new TestCallback();
-        try (Response response = oAuthService.execute(request, callback).get()) {
+        Response response = oAuthService.execute(request, callback).get();
+        try{
 
             assertEquals(500, response.getCode());
             assertEquals(500, callback.getResponse().getCode());
-        }
+        } finally {
+			response.close();
+		}
 
         server.shutdown();
     }

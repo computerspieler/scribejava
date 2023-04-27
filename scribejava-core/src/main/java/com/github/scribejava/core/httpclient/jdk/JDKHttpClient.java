@@ -79,12 +79,17 @@ public class JDKHttpClient implements HttpClient {
             if (callback != null) {
                 callback.onCompleted(t);
             }
-            return new JDKHttpFuture<>(t);
-        } catch (IOException | RuntimeException e) {
+            return new JDKHttpFuture(t);
+        } catch (IOException e) {
             if (callback != null) {
                 callback.onThrowable(e);
             }
-            return new JDKHttpFuture<>(e);
+            return new JDKHttpFuture(e);
+        } catch (RuntimeException e) {
+            if (callback != null) {
+                callback.onThrowable(e);
+            }
+            return new JDKHttpFuture(e);
         }
     }
 
@@ -170,7 +175,7 @@ public class JDKHttpClient implements HttpClient {
     }
 
     private static Map<String, String> parseHeaders(HttpURLConnection conn) {
-        final Map<String, String> headers = new HashMap<>();
+        final Map<String, String> headers = new HashMap();
 
         for (Map.Entry<String, List<String>> headerField : conn.getHeaderFields().entrySet()) {
             final String key = headerField.getKey();

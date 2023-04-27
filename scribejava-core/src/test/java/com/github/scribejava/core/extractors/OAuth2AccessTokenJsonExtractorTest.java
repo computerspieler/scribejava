@@ -22,9 +22,12 @@ public class OAuth2AccessTokenJsonExtractorTest {
         final String responseBody = "{ \"access_token\":\"I0122HHJKLEM21F3WLPYHDKGKZULAUO4SGMV3ABKFTDT3T3X\", "
                 + "\"token_type\":\"example\"}";
         final OAuth2AccessToken token;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             token = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("I0122HHJKLEM21F3WLPYHDKGKZULAUO4SGMV3ABKFTDT3T3X", token.getAccessToken());
     }
 
@@ -34,9 +37,12 @@ public class OAuth2AccessTokenJsonExtractorTest {
                 + "\"token_type\":\"example\","
                 + "\"scope\":\"s1\"}";
         final OAuth2AccessToken token;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             token = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("I0122HHJKLEM21F3WLPYHDKGKZULAUO4SGMV3ABKFTDT3T4X", token.getAccessToken());
         assertEquals("s1", token.getScope());
 
@@ -44,9 +50,12 @@ public class OAuth2AccessTokenJsonExtractorTest {
                 + "\"token_type\":\"example\","
                 + "\"scope\":\"s1 s2\"}";
         final OAuth2AccessToken token2;
-        try (Response response = ok(responseBody2)) {
+        response = ok(responseBody2);
+        try{
             token2 = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("I0122HHJKLEM21F3WLPYHDKGKZULAUO4SGMV3ABKFTDT3T5X", token2.getAccessToken());
         assertEquals("s1 s2", token2.getScope());
 
@@ -55,35 +64,44 @@ public class OAuth2AccessTokenJsonExtractorTest {
                 + "\"scope\":\"s3 s4\", "
                 + "\"refresh_token\":\"refresh_token1\"}";
         final OAuth2AccessToken token3;
-        try (Response response = ok(responseBody3)) {
+        response = ok(responseBody3);
+        try{
             token3 = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("I0122HHJKLEM21F3WLPYHDKGKZULAUO4SGMV3ABKFTDT3T6X", token3.getAccessToken());
         assertEquals("s3 s4", token3.getScope());
         assertEquals("refresh_token1", token3.getRefreshToken());
     }
 
     public void shouldThrowExceptionIfForNullParameters() throws IOException {
-        try (Response response = ok(null)) {
+        final Response response = ok(null);
+        try{
             assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
                 @Override
                 public void run() throws Throwable {
                     extractor.extract(response);
                 }
             });
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public void shouldThrowExceptionIfForEmptyStrings() throws IOException {
         final String responseBody = "";
-        try (Response response = ok(responseBody)) {
+        final Response response = ok(responseBody);
+        try{
             assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
                 @Override
                 public void run() throws Throwable {
                     extractor.extract(response);
                 }
             });
-        }
+        } finally {
+			response.close();
+		}
     }
 
     @Test
@@ -92,7 +110,8 @@ public class OAuth2AccessTokenJsonExtractorTest {
                 + "\"error_description\":\"unknown, invalid, or expired refresh token\","
                 + "\"error\":\"invalid_grant\""
                 + "}";
-        try (Response response = error(responseBody)) {
+        final Response response = error(responseBody);
+        try{
             final OAuth2AccessTokenErrorResponse oaer = assertThrows(OAuth2AccessTokenErrorResponse.class,
                     new ThrowingRunnable() {
                 @Override
@@ -102,7 +121,9 @@ public class OAuth2AccessTokenJsonExtractorTest {
             });
             assertEquals(OAuth2Error.INVALID_GRANT, oaer.getError());
             assertEquals("unknown, invalid, or expired refresh token", oaer.getErrorDescription());
-        }
+        } finally {
+			response.close();
+		}
     }
 
     @Test
@@ -110,9 +131,12 @@ public class OAuth2AccessTokenJsonExtractorTest {
         final String responseBody = "{ \"access_token\":\"I0122HKLEM2\\/MV3ABKFTDT3T5X\","
                 + "\"token_type\":\"example\"}";
         final OAuth2AccessToken token;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             token = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("I0122HKLEM2/MV3ABKFTDT3T5X", token.getAccessToken());
     }
 

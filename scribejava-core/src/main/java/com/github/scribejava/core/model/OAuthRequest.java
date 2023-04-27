@@ -24,7 +24,7 @@ public class OAuthRequest {
     private final Verb verb;
     private final ParameterList querystringParams = new ParameterList();
     private final ParameterList bodyParams = new ParameterList();
-    private final Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, String> headers = new TreeMap(String.CASE_INSENSITIVE_ORDER);
 
     private String charset;
 
@@ -33,7 +33,7 @@ public class OAuthRequest {
     private File filePayload;
     private MultipartPayload multipartPayload;
 
-    private final Map<String, String> oauthParameters = new HashMap<>();
+    private final Map<String, String> oauthParameters = new HashMap();
 
     private String realm;
 

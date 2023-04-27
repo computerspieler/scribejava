@@ -34,8 +34,15 @@ public class RSASha1SignatureService implements SignatureService {
             signature.initSign(privateKey);
             signature.update(baseString.getBytes(UTF8));
             return Base64.encode(signature.sign());
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException | UnsupportedEncodingException
-                | RuntimeException e) {
+        } catch (NoSuchAlgorithmException e) {
+            throw new OAuthSignatureException(baseString, e);
+        } catch (InvalidKeyException e) {
+            throw new OAuthSignatureException(baseString, e);
+        } catch (SignatureException e) {
+            throw new OAuthSignatureException(baseString, e);
+        } catch (UnsupportedEncodingException e) {
+            throw new OAuthSignatureException(baseString, e);
+        } catch (RuntimeException e) {
             throw new OAuthSignatureException(baseString, e);
         }
     }

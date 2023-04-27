@@ -36,7 +36,7 @@ class OAuth20ServiceUnit extends OAuth20Service {
     }
 
     private String prepareRawResponse(OAuthRequest request) {
-        final Map<String, Object> response = new HashMap<>();
+        final Map<String, Object> response = new HashMap();
         response.put(OAuthConstants.ACCESS_TOKEN, TOKEN);
         response.put(OAuthConstants.STATE, STATE);
         response.put("expires_in", EXPIRES);
@@ -62,7 +62,7 @@ class OAuth20ServiceUnit extends OAuth20Service {
         final OAuth2AccessToken accessToken = new OAuth2AccessToken(TOKEN, prepareRawResponse(request));
 
         try {
-            return new CompletedFuture<>(accessToken);
+            return new CompletedFuture(accessToken);
         } finally {
             if (callback != null) {
                 callback.onCompleted(accessToken);

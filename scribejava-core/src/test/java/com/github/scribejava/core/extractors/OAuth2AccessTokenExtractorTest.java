@@ -27,9 +27,12 @@ public class OAuth2AccessTokenExtractorTest {
         final String responseBody = "access_token=166942940015970|2.2ltzWXYNDjCtg5ZDVVJJeg__.3600.1295816400-548517159"
                 + "|RsXNdKrpxg8L6QNLWcs2TVTmcaE";
         final OAuth2AccessToken extracted;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             extracted = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("166942940015970|2.2ltzWXYNDjCtg5ZDVVJJeg__.3600.1295816400-548517159|RsXNdKrpxg8L6QNLWcs2TVTmcaE",
                 extracted.getAccessToken());
     }
@@ -39,9 +42,12 @@ public class OAuth2AccessTokenExtractorTest {
         final String responseBody = "access_token=166942940015970|2.2ltzWXYNDjCtg5ZDVVJJeg__.3600.1295816400-548517159"
                 + "|RsXNdKrpxg8L6QNLWcs2TVTmcaE&expires_in=5108";
         final OAuth2AccessToken extracted;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             extracted = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("166942940015970|2.2ltzWXYNDjCtg5ZDVVJJeg__.3600.1295816400-548517159|RsXNdKrpxg8L6QNLWcs2TVTmcaE",
                 extracted.getAccessToken());
         assertEquals(Integer.valueOf(5108), extracted.getExpiresIn());
@@ -52,9 +58,12 @@ public class OAuth2AccessTokenExtractorTest {
         final String responseBody = "access_token=166942940015970|2.2ltzWXYNDjCtg5ZDVVJJeg__.3600.1295816400-548517159"
                 + "|RsXNdKrpxg8L6QNLWcs2TVTmcaE&expires_in=5108&token_type=bearer&refresh_token=166942940015970";
         final OAuth2AccessToken extracted;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             extracted = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("166942940015970|2.2ltzWXYNDjCtg5ZDVVJJeg__.3600.1295816400-548517159|RsXNdKrpxg8L6QNLWcs2TVTmcaE",
                 extracted.getAccessToken());
         assertEquals(Integer.valueOf(5108), extracted.getExpiresIn());
@@ -66,57 +75,72 @@ public class OAuth2AccessTokenExtractorTest {
     public void shouldExtractTokenFromResponseWithManyParameters() throws IOException {
         final String responseBody = "access_token=foo1234&other_stuff=yeah_we_have_this_too&number=42";
         final OAuth2AccessToken extracted;
-        try (Response response = ok(responseBody)) {
+        Response response = ok(responseBody);
+        try{
             extracted = extractor.extract(response);
-        }
+        } finally {
+			response.close();
+		}
         assertEquals("foo1234", extracted.getAccessToken());
     }
 
     public void shouldThrowExceptionIfErrorResponse() throws IOException {
         final String responseBody = "";
-        try (Response response = error(responseBody)) {
+        final Response response = error(responseBody);
+        try{
             assertThrows(OAuthException.class, new ThrowingRunnable() {
                 @Override
                 public void run() throws Throwable {
                     extractor.extract(response);
                 }
             });
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public void shouldThrowExceptionIfTokenIsAbsent() throws IOException {
         final String responseBody = "&expires=5108";
-        try (Response response = ok(responseBody)) {
+        final Response response = ok(responseBody);
+        try{
             assertThrows(OAuthException.class, new ThrowingRunnable() {
                 @Override
                 public void run() throws Throwable {
                     extractor.extract(response);
                 }
             });
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public void shouldThrowExceptionIfResponseIsNull() throws IOException {
-        try (Response response = ok(null)) {
+        final Response response = ok(null);
+        try{
             assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
                 @Override
                 public void run() throws Throwable {
                     extractor.extract(response);
                 }
             });
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public void shouldThrowExceptionIfResponseIsEmptyString() throws IOException {
         final String responseBody = "";
-        try (Response response = ok(responseBody)) {
+        final Response response = ok(responseBody);
+        try{
             assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
                 @Override
                 public void run() throws Throwable {
                     extractor.extract(response);
                 }
             });
-        }
+        } finally {
+			response.close();
+		}
     }
 
     private static Response ok(String body) {

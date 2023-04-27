@@ -34,7 +34,7 @@ public class MultipartUtilsTest {
 
     @Test
     public void testSimpleMultipartPayload() throws IOException {
-        final Map<String, String> headers = new LinkedHashMap<>();
+        final Map<String, String> headers = new LinkedHashMap();
         headers.put("X-Header", "X-Value");
         headers.put("Content-Disposition", "Content-Disposition-Value");
         final MultipartPayload mP = new MultipartPayload("mixed", "simple boundary", headers);
@@ -167,13 +167,13 @@ public class MultipartUtilsTest {
         final MultipartPayload innerMP = new MultipartPayload("parallel", "unique-boundary-2");
         mP.addBodyPart(innerMP);
 
-        final Map<String, String> audioHeaders = new LinkedHashMap<>();
+        final Map<String, String> audioHeaders = new LinkedHashMap();
         audioHeaders.put("Content-Type", "audio/basic");
         audioHeaders.put("Content-Transfer-Encoding", "base64");
         innerMP.addBodyPart(new ByteArrayBodyPartPayload(("... base64-encoded 8000 Hz single-channel\n"
                 + "    mu-law-format audio data goes here ...").getBytes(), audioHeaders));
 
-        final Map<String, String> imageHeaders = new LinkedHashMap<>();
+        final Map<String, String> imageHeaders = new LinkedHashMap();
         imageHeaders.put("Content-Type", "image/jpeg");
         imageHeaders.put("Content-Transfer-Encoding", "base64");
         innerMP.addBodyPart(new ByteArrayBodyPartPayload("... base64-encoded image data goes here ...".getBytes(),

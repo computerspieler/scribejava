@@ -12,7 +12,7 @@ public class MultipartPayload extends BodyPartPayload {
 
     private final String boundary;
     private String preamble;
-    private final List<BodyPartPayload> bodyParts = new ArrayList<>();
+    private final List<BodyPartPayload> bodyParts = new ArrayList();
     private String epilogue;
 
     public MultipartPayload() {

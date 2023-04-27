@@ -17,11 +17,11 @@ public class ParameterList {
     private final List<Parameter> params;
 
     public ParameterList() {
-        params = new ArrayList<>();
+        params = new ArrayList();
     }
 
     ParameterList(List<Parameter> params) {
-        this.params = new ArrayList<>(params);
+        this.params = new ArrayList(params);
     }
 
     public ParameterList(Map<String, String> map) {

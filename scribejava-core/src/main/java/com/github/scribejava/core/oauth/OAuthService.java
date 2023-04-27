@@ -137,7 +137,9 @@ public abstract class OAuthService implements Closeable {
         final String message = String.format(messagePattern, params) + '\n';
         try {
             debugStream.write(message.getBytes("UTF8"));
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException e) {
+            throw new RuntimeException("there were problems while writting to the debug stream", e);
+        } catch (RuntimeException e) {
             throw new RuntimeException("there were problems while writting to the debug stream", e);
         }
     }

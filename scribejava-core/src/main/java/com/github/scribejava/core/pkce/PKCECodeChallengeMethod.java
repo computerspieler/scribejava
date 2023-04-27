@@ -1,7 +1,7 @@
 package com.github.scribejava.core.pkce;
 
 import com.github.scribejava.core.base64.Base64;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,7 +10,7 @@ public enum PKCECodeChallengeMethod {
         @Override
         public String transform2CodeChallenge(String codeVerifier) throws NoSuchAlgorithmException {
             return Base64.encodeUrlWithoutPadding(
-                    MessageDigest.getInstance("SHA-256").digest(codeVerifier.getBytes(StandardCharsets.US_ASCII)));
+                    MessageDigest.getInstance("SHA-256").digest(codeVerifier.getBytes(Charset.forName("US-ASCII"))));
         }
     },
     PLAIN {

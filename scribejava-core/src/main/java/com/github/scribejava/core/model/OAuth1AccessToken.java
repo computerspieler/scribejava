@@ -1,6 +1,6 @@
 package com.github.scribejava.core.model;
 
-import java.util.Objects;
+import fr.speilkoun.util.Objects;
 
 /**
  * Represents an OAuth 1 Access Token http://tools.ietf.org/html/rfc5849#section-2.3

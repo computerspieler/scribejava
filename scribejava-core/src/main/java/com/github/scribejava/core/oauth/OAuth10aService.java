@@ -39,14 +39,17 @@ public class OAuth10aService extends OAuthService {
         final OAuthRequest request = prepareRequestTokenRequest();
 
         log("sending request...");
-        try ( Response response = execute(request)) {
+		Response response = execute(request);
+        try {
             if (isDebug()) {
                 final String body = response.getBody();
                 log("response status code: %s", response.getCode());
                 log("response body: %s", body);
             }
             return api.getRequestTokenExtractor().extract(response);
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public Future<OAuth1RequestToken> getRequestTokenAsync() {
@@ -105,9 +108,12 @@ public class OAuth10aService extends OAuthService {
             log("obtaining access token from %s", api.getAccessTokenEndpoint());
         }
         final OAuthRequest request = prepareAccessTokenRequest(requestToken, oauthVerifier);
-        try ( Response response = execute(request)) {
+        Response response = execute(request);
+		try {
             return api.getAccessTokenExtractor().extract(response);
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public Future<OAuth1AccessToken> getAccessTokenAsync(OAuth1RequestToken requestToken, String oauthVerifier) {

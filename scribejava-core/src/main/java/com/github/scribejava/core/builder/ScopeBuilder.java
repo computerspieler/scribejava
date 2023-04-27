@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class ScopeBuilder {
 
-    private final Set<String> scopes = new HashSet<>();
+    private final Set<String> scopes = new HashSet();
 
     public ScopeBuilder() {
     }

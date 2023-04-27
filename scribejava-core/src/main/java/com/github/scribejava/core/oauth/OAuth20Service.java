@@ -108,15 +108,10 @@ public class OAuth20Service extends OAuthService {
             final String[] keyValue = param.split("=");
             if (keyValue.length == 2) {
                 try {
-                    switch (keyValue[0]) {
-                        case "code":
-                            authorization.setCode(URLDecoder.decode(keyValue[1], "UTF-8"));
-                            break;
-                        case "state":
-                            authorization.setState(URLDecoder.decode(keyValue[1], "UTF-8"));
-                            break;
-                        default: //just ignore any other param;
-                    }
+					if(keyValue[0].equals("code"))
+						authorization.setCode(URLDecoder.decode(keyValue[1], "UTF-8"));
+					else if(keyValue[0].equals("state"))
+						authorization.setState(URLDecoder.decode(keyValue[1], "UTF-8"));
                 } catch (UnsupportedEncodingException ueE) {
                     throw new IllegalStateException("jvm without UTF-8, really?", ueE);
                 }
@@ -148,14 +143,17 @@ public class OAuth20Service extends OAuthService {
         if (isDebug()) {
             log("send request for access token synchronously to %s", request.getCompleteUrl());
         }
-        try (Response response = execute(request)) {
+		Response response = execute(request);
+        try {
             if (isDebug()) {
                 log("response status code: %s", response.getCode());
                 log("response body: %s", response.getBody());
             }
 
             return api.getAccessTokenExtractor().extract(response);
-        }
+        } finally {
+			response.close();
+		}
     }
 
     //protected to facilitate mocking
@@ -471,9 +469,12 @@ public class OAuth20Service extends OAuthService {
             throws IOException, InterruptedException, ExecutionException {
         final OAuthRequest request = createRevokeTokenRequest(tokenToRevoke, tokenTypeHint);
 
-        try (Response response = execute(request)) {
+		Response response = execute(request);
+        try {
             checkForErrorRevokeToken(response);
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public Future<Void> revokeToken(String tokenToRevoke, OAuthAsyncRequestCallback<Void> callback) {
@@ -545,14 +546,17 @@ public class OAuth20Service extends OAuthService {
             throws InterruptedException, ExecutionException, IOException {
         final OAuthRequest request = createDeviceAuthorizationCodesRequest(scope);
 
-        try (Response response = execute(request)) {
+		Response response = execute(request);
+        try {
             if (isDebug()) {
                 log("got DeviceAuthorizationCodes response");
                 log("response status code: %s", response.getCode());
                 log("response body: %s", response.getBody());
             }
             return api.getDeviceAuthorizationExtractor().extract(response);
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public Future<DeviceAuthorization> getDeviceAuthorizationCodes(
@@ -613,14 +617,17 @@ public class OAuth20Service extends OAuthService {
             throws InterruptedException, ExecutionException, IOException {
         final OAuthRequest request = createAccessTokenDeviceAuthorizationGrantRequest(deviceAuthorization);
 
-        try (Response response = execute(request)) {
+		Response response = execute(request);
+        try {
             if (isDebug()) {
                 log("got AccessTokenDeviceAuthorizationGrant response");
                 log("response status code: %s", response.getCode());
                 log("response body: %s", response.getBody());
             }
             return api.getAccessTokenExtractor().extract(response);
-        }
+        } finally {
+			response.close();
+		}
     }
 
     public Future<OAuth2AccessToken> getAccessTokenDeviceAuthorizationGrant(DeviceAuthorization deviceAuthorization,
