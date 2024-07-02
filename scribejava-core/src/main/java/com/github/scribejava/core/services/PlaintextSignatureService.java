@@ -14,7 +14,7 @@ public class PlaintextSignatureService implements SignatureService {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String getSignature(String baseString, String apiSecret, String tokenSecret) {
         try {
             Preconditions.checkNotNull(apiSecret, "Api secret can't be null");
@@ -27,7 +27,7 @@ public class PlaintextSignatureService implements SignatureService {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String getSignatureMethod() {
         return METHOD;
     }

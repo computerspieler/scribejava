@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.json.JSONException;
+
 public class OAuth20Service extends OAuthService {
 
     private static final String VERSION = "2.0";
@@ -44,7 +46,7 @@ public class OAuth20Service extends OAuthService {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String getVersion() {
         return VERSION;
     }
@@ -139,10 +141,11 @@ public class OAuth20Service extends OAuthService {
     // ===== common AccessToken request methods =====
     //protected to facilitate mocking
     protected OAuth2AccessToken sendAccessTokenRequestSync(OAuthRequest request)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         if (isDebug()) {
             log("send request for access token synchronously to %s", request.getCompleteUrl());
         }
+		
 		Response response = execute(request);
         try {
             if (isDebug()) {
@@ -169,8 +172,8 @@ public class OAuth20Service extends OAuthService {
         }
 
         return execute(request, callback, new OAuthRequest.ResponseConverter<OAuth2AccessToken>() {
-            @Override
-            public OAuth2AccessToken convert(Response response) throws IOException {
+            //@Override
+            public OAuth2AccessToken convert(Response response) throws IOException, JSONException {
                 log("received response for access token");
                 if (isDebug()) {
                     log("response status code: %s", response.getCode());
@@ -210,7 +213,7 @@ public class OAuth20Service extends OAuthService {
         final Map<String, String> extraParameters = params.getExtraParameters();
         if (extraParameters != null && !extraParameters.isEmpty()) {
             for (Map.Entry<String, String> extraParameter : extraParameters.entrySet()) {
-                request.addParameter(extraParameter.getKey(), extraParameter.getValue());
+				request.addParameter(extraParameter.getKey(), extraParameter.getValue());
             }
         }
 
@@ -226,12 +229,13 @@ public class OAuth20Service extends OAuthService {
         return getAccessToken(params, null);
     }
 
-    public OAuth2AccessToken getAccessToken(String code) throws IOException, InterruptedException, ExecutionException {
+    public OAuth2AccessToken getAccessToken(String code)
+		throws IOException, InterruptedException, ExecutionException, JSONException {
         return getAccessToken(AccessTokenRequestParams.create(code));
     }
 
     public OAuth2AccessToken getAccessToken(AccessTokenRequestParams params)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         return sendAccessTokenRequestSync(createAccessTokenRequest(params));
     }
 
@@ -255,7 +259,7 @@ public class OAuth20Service extends OAuthService {
 
     // ===== refresh AccessToken methods =====
     protected OAuthRequest createRefreshTokenRequest(String refreshToken, String scope) {
-        if (refreshToken == null || refreshToken.isEmpty()) {
+        if (refreshToken == null || refreshToken.length() == 0) {
             throw new IllegalArgumentException("The refreshToken cannot be null or empty");
         }
         final OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getRefreshTokenEndpoint());
@@ -285,12 +289,12 @@ public class OAuth20Service extends OAuthService {
     }
 
     public OAuth2AccessToken refreshAccessToken(String refreshToken)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         return refreshAccessToken(refreshToken, (String) null);
     }
 
     public OAuth2AccessToken refreshAccessToken(String refreshToken, String scope)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         final OAuthRequest request = createRefreshTokenRequest(refreshToken, scope);
 
         return sendAccessTokenRequestSync(request);
@@ -332,14 +336,14 @@ public class OAuth20Service extends OAuthService {
     }
 
     public OAuth2AccessToken getAccessTokenPasswordGrant(String username, String password)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         final OAuthRequest request = createAccessTokenPasswordGrantRequest(username, password, null);
 
         return sendAccessTokenRequestSync(request);
     }
 
     public OAuth2AccessToken getAccessTokenPasswordGrant(String username, String password, String scope)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         final OAuthRequest request = createAccessTokenPasswordGrantRequest(username, password, scope);
 
         return sendAccessTokenRequestSync(request);
@@ -403,14 +407,14 @@ public class OAuth20Service extends OAuthService {
     }
 
     public OAuth2AccessToken getAccessTokenClientCredentialsGrant()
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         final OAuthRequest request = createAccessTokenClientCredentialsGrantRequest(null);
 
         return sendAccessTokenRequestSync(request);
     }
 
     public OAuth2AccessToken getAccessTokenClientCredentialsGrant(String scope)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         final OAuthRequest request = createAccessTokenClientCredentialsGrantRequest(scope);
 
         return sendAccessTokenRequestSync(request);
@@ -461,12 +465,12 @@ public class OAuth20Service extends OAuthService {
         return revokeToken(tokenToRevoke, null, tokenTypeHint);
     }
 
-    public void revokeToken(String tokenToRevoke) throws IOException, InterruptedException, ExecutionException {
+    public void revokeToken(String tokenToRevoke) throws IOException, InterruptedException, ExecutionException, JSONException {
         revokeToken(tokenToRevoke, (TokenTypeHint) null);
     }
 
     public void revokeToken(String tokenToRevoke, TokenTypeHint tokenTypeHint)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         final OAuthRequest request = createRevokeTokenRequest(tokenToRevoke, tokenTypeHint);
 
 		Response response = execute(request);
@@ -486,8 +490,8 @@ public class OAuth20Service extends OAuthService {
         final OAuthRequest request = createRevokeTokenRequest(tokenToRevoke, tokenTypeHint);
 
         return execute(request, callback, new OAuthRequest.ResponseConverter<Void>() {
-            @Override
-            public Void convert(Response response) throws IOException {
+            //@Override
+            public Void convert(Response response) throws IOException, JSONException {
                 checkForErrorRevokeToken(response);
                 response.close();
                 return null;
@@ -495,7 +499,7 @@ public class OAuth20Service extends OAuthService {
         });
     }
 
-    private void checkForErrorRevokeToken(Response response) throws IOException {
+    private void checkForErrorRevokeToken(Response response) throws IOException, JSONException {
         if (response.getCode() != 200) {
             OAuth2AccessTokenJsonExtractor.instance().generateError(response);
         }
@@ -527,7 +531,7 @@ public class OAuth20Service extends OAuthService {
      * @throws IOException IOException
      */
     public DeviceAuthorization getDeviceAuthorizationCodes()
-            throws InterruptedException, ExecutionException, IOException {
+            throws InterruptedException, ExecutionException, IOException, JSONException {
         return getDeviceAuthorizationCodes((String) null);
     }
 
@@ -543,7 +547,7 @@ public class OAuth20Service extends OAuthService {
      * @throws IOException IOException
      */
     public DeviceAuthorization getDeviceAuthorizationCodes(String scope)
-            throws InterruptedException, ExecutionException, IOException {
+            throws InterruptedException, ExecutionException, IOException, JSONException {
         final OAuthRequest request = createDeviceAuthorizationCodesRequest(scope);
 
 		Response response = execute(request);
@@ -569,8 +573,8 @@ public class OAuth20Service extends OAuthService {
         final OAuthRequest request = createDeviceAuthorizationCodesRequest(scope);
 
         return execute(request, callback, new OAuthRequest.ResponseConverter<DeviceAuthorization>() {
-            @Override
-            public DeviceAuthorization convert(Response response) throws IOException {
+            //@Override
+            public DeviceAuthorization convert(Response response) throws IOException, JSONException {
                 final DeviceAuthorization deviceAuthorization = api.getDeviceAuthorizationExtractor().extract(response);
                 response.close();
                 return deviceAuthorization;
@@ -614,7 +618,7 @@ public class OAuth20Service extends OAuthService {
      * @see #getDeviceAuthorizationCodes()
      */
     public OAuth2AccessToken getAccessTokenDeviceAuthorizationGrant(DeviceAuthorization deviceAuthorization)
-            throws InterruptedException, ExecutionException, IOException {
+            throws InterruptedException, ExecutionException, IOException, JSONException {
         final OAuthRequest request = createAccessTokenDeviceAuthorizationGrantRequest(deviceAuthorization);
 
 		Response response = execute(request);
@@ -635,8 +639,8 @@ public class OAuth20Service extends OAuthService {
         final OAuthRequest request = createAccessTokenDeviceAuthorizationGrantRequest(deviceAuthorization);
 
         return execute(request, callback, new OAuthRequest.ResponseConverter<OAuth2AccessToken>() {
-            @Override
-            public OAuth2AccessToken convert(Response response) throws IOException {
+            //@Override
+            public OAuth2AccessToken convert(Response response) throws IOException, JSONException {
                 final OAuth2AccessToken accessToken = api.getAccessTokenExtractor().extract(response);
                 response.close();
                 return accessToken;
@@ -663,7 +667,7 @@ public class OAuth20Service extends OAuthService {
      * @see #getDeviceAuthorizationCodes()
      */
     public OAuth2AccessToken pollAccessTokenDeviceAuthorizationGrant(DeviceAuthorization deviceAuthorization)
-            throws InterruptedException, ExecutionException, IOException {
+            throws InterruptedException, ExecutionException, IOException, JSONException {
         long intervalMillis = deviceAuthorization.getIntervalSeconds() * 1000;
         while (true) {
             try {

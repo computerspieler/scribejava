@@ -16,7 +16,7 @@ public class Parameter implements Comparable<Parameter> {
         return OAuthEncoder.encode(key).concat("=").concat(OAuthEncoder.encode(value));
     }
 
-    @Override
+    //@Override
     public boolean equals(Object other) {
         if (other == null) {
             return false;
@@ -40,12 +40,12 @@ public class Parameter implements Comparable<Parameter> {
         return value;
     }
 
-    @Override
+    //@Override
     public int hashCode() {
         return key.hashCode() + value.hashCode();
     }
 
-    @Override
+    //@Override
     public int compareTo(Parameter parameter) {
         final int keyDiff = key.compareTo(parameter.getKey());
 

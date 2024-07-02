@@ -32,7 +32,7 @@ public abstract class Preconditions {
     }
 
     public static boolean hasText(String str) {
-        if (str == null || str.isEmpty()) {
+        if (str == null || str.length() == 0) {
             return false;
         }
         final int strLen = str.length();

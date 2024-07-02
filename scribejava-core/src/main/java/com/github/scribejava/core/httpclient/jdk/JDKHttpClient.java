@@ -1,14 +1,5 @@
 package com.github.scribejava.core.httpclient.jdk;
 
-import com.github.scribejava.core.exceptions.OAuthException;
-import com.github.scribejava.core.httpclient.HttpClient;
-import com.github.scribejava.core.httpclient.multipart.MultipartPayload;
-import com.github.scribejava.core.httpclient.multipart.MultipartUtils;
-import com.github.scribejava.core.model.OAuthAsyncRequestCallback;
-import com.github.scribejava.core.model.OAuthConstants;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +13,18 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import com.github.scribejava.core.exceptions.OAuthException;
+import com.github.scribejava.core.httpclient.HttpClient;
+import com.github.scribejava.core.httpclient.multipart.MultipartPayload;
+import com.github.scribejava.core.httpclient.multipart.MultipartUtils;
+import com.github.scribejava.core.model.OAuthAsyncRequestCallback;
+import com.github.scribejava.core.model.OAuthConstants;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+
+import org.json.JSONException;
+
 public class JDKHttpClient implements HttpClient {
 
     private final JDKHttpClientConfig config;
@@ -34,11 +37,11 @@ public class JDKHttpClient implements HttpClient {
         config = clientConfig;
     }
 
-    @Override
+    //@Override
     public void close() {
     }
 
-    @Override
+    //@Override
     public <T> Future<T> executeAsync(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             byte[] bodyContents, OAuthAsyncRequestCallback<T> callback, OAuthRequest.ResponseConverter<T> converter) {
 
@@ -46,7 +49,7 @@ public class JDKHttpClient implements HttpClient {
                 converter);
     }
 
-    @Override
+    //@Override
     public <T> Future<T> executeAsync(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             MultipartPayload bodyContents, OAuthAsyncRequestCallback<T> callback,
             OAuthRequest.ResponseConverter<T> converter) {
@@ -55,7 +58,7 @@ public class JDKHttpClient implements HttpClient {
                 converter);
     }
 
-    @Override
+    //@Override
     public <T> Future<T> executeAsync(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             String bodyContents, OAuthAsyncRequestCallback<T> callback, OAuthRequest.ResponseConverter<T> converter) {
 
@@ -63,7 +66,7 @@ public class JDKHttpClient implements HttpClient {
                 converter);
     }
 
-    @Override
+    //@Override
     public <T> Future<T> executeAsync(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             File bodyContents, OAuthAsyncRequestCallback<T> callback, OAuthRequest.ResponseConverter<T> converter) {
         throw new UnsupportedOperationException("JDKHttpClient does not support File payload for the moment");
@@ -79,39 +82,44 @@ public class JDKHttpClient implements HttpClient {
             if (callback != null) {
                 callback.onCompleted(t);
             }
-            return new JDKHttpFuture(t);
+            return new JDKHttpFuture<T>(t);
         } catch (IOException e) {
             if (callback != null) {
                 callback.onThrowable(e);
             }
-            return new JDKHttpFuture(e);
+            return new JDKHttpFuture<T>(e);
         } catch (RuntimeException e) {
             if (callback != null) {
                 callback.onThrowable(e);
             }
-            return new JDKHttpFuture(e);
+            return new JDKHttpFuture<T>(e);
+        } catch (JSONException e) {
+            if (callback != null) {
+                callback.onThrowable(e);
+            }
+            return new JDKHttpFuture<T>(e);
         }
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             byte[] bodyContents) throws InterruptedException, ExecutionException, IOException {
         return doExecute(userAgent, headers, httpVerb, completeUrl, BodyType.BYTE_ARRAY, bodyContents);
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             MultipartPayload multipartPayloads) throws InterruptedException, ExecutionException, IOException {
         return doExecute(userAgent, headers, httpVerb, completeUrl, BodyType.MULTIPART, multipartPayloads);
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             String bodyContents) throws InterruptedException, ExecutionException, IOException {
         return doExecute(userAgent, headers, httpVerb, completeUrl, BodyType.STRING, bodyContents);
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             File bodyContents) throws InterruptedException, ExecutionException, IOException {
         throw new UnsupportedOperationException("JDKHttpClient does not support File payload for the moment");
@@ -126,6 +134,15 @@ public class JDKHttpClient implements HttpClient {
         } else {
             connection = (HttpURLConnection) url.openConnection(config.getProxy());
         }
+        
+/*
+		try {
+			connection.setSSLSocketFactory(SSLContext.getDefault().getSocketFactory());
+		} catch (NoSuchAlgorithmException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+*/
         connection.setInstanceFollowRedirects(config.isFollowRedirects());
         connection.setRequestMethod(httpVerb.name());
         if (config.getConnectTimeout() != null) {
@@ -152,19 +169,19 @@ public class JDKHttpClient implements HttpClient {
 
     private enum BodyType {
         BYTE_ARRAY {
-            @Override
+            //@Override
             void setBody(HttpURLConnection connection, Object bodyContents, boolean requiresBody) throws IOException {
                 addBody(connection, (byte[]) bodyContents, requiresBody);
             }
         },
         MULTIPART {
-            @Override
+            //@Override
             void setBody(HttpURLConnection connection, Object bodyContents, boolean requiresBody) throws IOException {
                 addBody(connection, (MultipartPayload) bodyContents, requiresBody);
             }
         },
         STRING {
-            @Override
+            //@Override
             void setBody(HttpURLConnection connection, Object bodyContents, boolean requiresBody) throws IOException {
                 addBody(connection, ((String) bodyContents).getBytes(), requiresBody);
             }
@@ -175,7 +192,7 @@ public class JDKHttpClient implements HttpClient {
     }
 
     private static Map<String, String> parseHeaders(HttpURLConnection conn) {
-        final Map<String, String> headers = new HashMap();
+        final Map<String, String> headers = new HashMap<String, String>();
 
         for (Map.Entry<String, List<String>> headerField : conn.getHeaderFields().entrySet()) {
             final String key = headerField.getKey();

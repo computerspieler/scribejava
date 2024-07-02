@@ -36,7 +36,7 @@ public class OAuth2AccessTokenExtractor implements TokenExtractor<OAuth2AccessTo
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public OAuth2AccessToken extract(Response response) throws IOException {
         if (response.getCode() != 200) {
             throw new OAuthException("Response code is not 200 but '" + response.getCode() + '\'');

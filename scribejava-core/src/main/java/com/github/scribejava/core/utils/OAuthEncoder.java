@@ -15,7 +15,7 @@ public abstract class OAuthEncoder {
     private static final Map<String, String> ENCODING_RULES;
 
     static {
-        final Map<String, String> rules = new HashMap();
+        final Map<String, String> rules = new HashMap<String, String>();
         rules.put("*", "%2A");
         rules.put("+", "%20");
         rules.put("%7E", "~");

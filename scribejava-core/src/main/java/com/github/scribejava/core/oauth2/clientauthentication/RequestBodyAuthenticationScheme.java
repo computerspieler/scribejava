@@ -24,7 +24,7 @@ public class RequestBodyAuthenticationScheme implements ClientAuthentication {
         return InstanceHolder.INSTANCE;
     }
 
-    @Override
+    //@Override
     public void addClientAuthentication(OAuthRequest request, String apiKey, String apiSecret) {
         request.addParameter(OAuthConstants.CLIENT_ID, apiKey);
         if (apiSecret != null) {

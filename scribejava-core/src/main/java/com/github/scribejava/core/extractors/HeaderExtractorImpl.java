@@ -18,7 +18,7 @@ public class HeaderExtractorImpl implements HeaderExtractor {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String extract(OAuthRequest request) {
         checkPreconditions(request);
         final Map<String, String> parameters = request.getOauthParameters();
@@ -35,7 +35,7 @@ public class HeaderExtractorImpl implements HeaderExtractor {
                     .append('"');
         }
 
-        if (request.getRealm() != null && !request.getRealm().isEmpty()) {
+        if (request.getRealm() != null && request.getRealm().length() != 0) {
             header.append(PARAM_SEPARATOR)
                     .append(OAuthConstants.REALM)
                     .append("=\"")

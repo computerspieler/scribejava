@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractAsyncOnlyHttpClient implements HttpClient {
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             byte[] bodyContents) throws InterruptedException, ExecutionException, IOException {
 
@@ -27,7 +27,7 @@ public abstract class AbstractAsyncOnlyHttpClient implements HttpClient {
         return response;
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             com.github.scribejava.core.httpclient.multipart.MultipartPayload bodyContents)
             throws InterruptedException, ExecutionException, IOException {
@@ -46,7 +46,7 @@ public abstract class AbstractAsyncOnlyHttpClient implements HttpClient {
         return response;
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             String bodyContents) throws InterruptedException, ExecutionException, IOException {
 
@@ -64,7 +64,7 @@ public abstract class AbstractAsyncOnlyHttpClient implements HttpClient {
         return response;
     }
 
-    @Override
+    //@Override
     public Response execute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             File bodyContents) throws InterruptedException, ExecutionException, IOException {
 
@@ -86,11 +86,11 @@ public abstract class AbstractAsyncOnlyHttpClient implements HttpClient {
 
         private Throwable throwable;
 
-        @Override
+        //@Override
         public void onCompleted(Response response) {
         }
 
-        @Override
+        //@Override
         public void onThrowable(Throwable t) {
             throwable = t;
         }

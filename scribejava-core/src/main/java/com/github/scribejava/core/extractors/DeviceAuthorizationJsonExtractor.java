@@ -1,10 +1,12 @@
 package com.github.scribejava.core.extractors;
 
-import static com.github.scribejava.core.extractors.AbstractJsonExtractor.OBJECT_MAPPER;
-import static com.github.scribejava.core.extractors.AbstractJsonExtractor.extractRequiredParameter;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.scribejava.core.model.DeviceAuthorization;
 import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import com.github.scribejava.core.model.DeviceAuthorization;
 import com.github.scribejava.core.model.Response;
 
 public class DeviceAuthorizationJsonExtractor extends AbstractJsonExtractor {
@@ -21,37 +23,37 @@ public class DeviceAuthorizationJsonExtractor extends AbstractJsonExtractor {
         return InstanceHolder.INSTANCE;
     }
 
-    public DeviceAuthorization extract(Response response) throws IOException {
+    public DeviceAuthorization extract(Response response) throws IOException, JSONException {
         if (response.getCode() != 200) {
             generateError(response);
         }
         return createDeviceAuthorization(response.getBody());
     }
 
-    public void generateError(Response response) throws IOException {
+    public void generateError(Response response) throws IOException, JSONException {
         OAuth2AccessTokenJsonExtractor.instance().generateError(response);
     }
 
-    private DeviceAuthorization createDeviceAuthorization(String rawResponse) throws IOException {
+    private DeviceAuthorization createDeviceAuthorization(String rawResponse) throws IOException, JSONException {
 
-        final JsonNode response = OBJECT_MAPPER.readTree(rawResponse);
+    	final JSONTokener tokenizer = new JSONTokener(rawResponse);
+    	final JSONObject response = new JSONObject(tokenizer);
 
         final DeviceAuthorization deviceAuthorization = new DeviceAuthorization(
-                extractRequiredParameter(response, "device_code", rawResponse).textValue(),
-                extractRequiredParameter(response, "user_code", rawResponse).textValue(),
-                extractRequiredParameter(response, getVerificationUriParamName(), rawResponse).textValue(),
-                extractRequiredParameter(response, "expires_in", rawResponse).intValue());
+        		extractRequiredParameterText(response, "device_code", rawResponse),
+        		extractRequiredParameterText(response, "user_code", rawResponse),
+        		extractRequiredParameterText(response, getVerificationUriParamName(), rawResponse),
+        		extractRequiredParameterInt(response, "expires_in", rawResponse));
 
-        final JsonNode intervalSeconds = response.get("interval");
-        if (intervalSeconds != null) {
-            deviceAuthorization.setIntervalSeconds(intervalSeconds.asInt(5));
-        }
+    
+        try {
+        	deviceAuthorization.setIntervalSeconds(response.getInt("interval"));        	
+        } catch (JSONException e) {}
 
-        final JsonNode verificationUriComplete = response.get("verification_uri_complete");
-        if (verificationUriComplete != null) {
-            deviceAuthorization.setVerificationUriComplete(verificationUriComplete.asText());
-        }
-
+        try {
+        	deviceAuthorization.setVerificationUriComplete(response.getString("verification_uri_complete"));        	
+        } catch (JSONException e) {}
+ 
         return deviceAuthorization;
     }
 

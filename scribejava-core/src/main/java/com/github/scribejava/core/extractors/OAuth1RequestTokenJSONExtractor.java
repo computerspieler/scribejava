@@ -7,7 +7,7 @@ public class OAuth1RequestTokenJSONExtractor extends AbstractOAuth1JSONTokenExtr
     protected OAuth1RequestTokenJSONExtractor() {
     }
 
-    @Override
+    //@Override
     protected OAuth1RequestToken createToken(String token, String secret, String response) {
         return new OAuth1RequestToken(token, secret, response);
     }

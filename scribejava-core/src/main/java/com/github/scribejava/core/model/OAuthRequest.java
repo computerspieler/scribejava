@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import org.json.JSONException;
 
 /**
  * The representation of an OAuth HttpRequest.
@@ -24,7 +25,7 @@ public class OAuthRequest {
     private final Verb verb;
     private final ParameterList querystringParams = new ParameterList();
     private final ParameterList bodyParams = new ParameterList();
-    private final Map<String, String> headers = new TreeMap(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, String> headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
     private String charset;
 
@@ -33,7 +34,7 @@ public class OAuthRequest {
     private File filePayload;
     private MultipartPayload multipartPayload;
 
-    private final Map<String, String> oauthParameters = new HashMap();
+    private final Map<String, String> oauthParameters = new HashMap<String, String>();
 
     private String realm;
 
@@ -287,7 +288,7 @@ public class OAuthRequest {
         return filePayload;
     }
 
-    @Override
+    //@Override
     public String toString() {
         return String.format("@Request(%s %s)", getVerb(), getUrl());
     }
@@ -324,7 +325,7 @@ public class OAuthRequest {
          * @return T
          * @throws IOException IOException
          */
-        T convert(Response response) throws IOException;
+        T convert(Response response) throws IOException, JSONException;
     }
 
 }

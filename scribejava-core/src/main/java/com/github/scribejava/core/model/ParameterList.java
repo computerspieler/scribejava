@@ -17,11 +17,11 @@ public class ParameterList {
     private final List<Parameter> params;
 
     public ParameterList() {
-        params = new ArrayList();
+        params = new ArrayList<Parameter>();
     }
 
     ParameterList(List<Parameter> params) {
-        this.params = new ArrayList(params);
+        this.params = new ArrayList<Parameter>(params);
     }
 
     public ParameterList(Map<String, String> map) {
@@ -70,7 +70,7 @@ public class ParameterList {
     }
 
     public void addQuerystring(String queryString) {
-        if (queryString != null && !queryString.isEmpty()) {
+        if (queryString != null && queryString.length() != 0) {
             for (String param : queryString.split(PARAM_SEPARATOR)) {
                 final String[] pair = param.split(PAIR_SEPARATOR);
                 final String key = OAuthEncoder.decode(pair[0]);

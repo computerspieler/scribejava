@@ -1,9 +1,12 @@
 package com.github.scribejava.core.extractors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.net.URI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse;
 import com.github.scribejava.core.model.OAuthConstants;
@@ -28,8 +31,8 @@ public class OAuth2AccessTokenJsonExtractor extends AbstractJsonExtractor implem
         return InstanceHolder.INSTANCE;
     }
 
-    @Override
-    public OAuth2AccessToken extract(Response response) throws IOException {
+    //@Override
+    public OAuth2AccessToken extract(Response response) throws IOException, JSONException {
         final String body = response.getBody();
         Preconditions.checkEmptyString(body, "Response body is incorrect. Can't extract a token from an empty string");
 
@@ -46,19 +49,20 @@ public class OAuth2AccessTokenJsonExtractor extends AbstractJsonExtractor implem
      * @throws java.io.IOException IOException
      *
      */
-    public void generateError(Response response) throws IOException {
+    public void generateError(Response response) throws IOException, JSONException {
         final String responseBody = response.getBody();
-        final JsonNode responseBodyJson;
-        try {
-            responseBodyJson = OBJECT_MAPPER.readTree(responseBody);
-        } catch (JsonProcessingException ex) {
-            throw new OAuth2AccessTokenErrorResponse(null, null, null, response);
-        }
 
-        final JsonNode errorUriInString = responseBodyJson.get("error_uri");
-        URI errorUri;
-        try {
-            errorUri = errorUriInString == null ? null : URI.create(errorUriInString.asText());
+    	final JSONTokener tokenizer = new JSONTokener(responseBody);
+    	final JSONObject responseBodyJson = new JSONObject(tokenizer);
+        
+    	URI errorUri;
+    	try {
+    		try {
+    			final String errorUriInString = responseBodyJson.getString("error_uri");
+    	        errorUri = URI.create(errorUriInString);
+        	} catch(JSONException e) {
+        		errorUri = null;   		
+        	}
         } catch (IllegalArgumentException iae) {
             errorUri = null;
         }
@@ -66,35 +70,52 @@ public class OAuth2AccessTokenJsonExtractor extends AbstractJsonExtractor implem
         OAuth2Error errorCode;
         try {
             errorCode = OAuth2Error
-                    .parseFrom(extractRequiredParameter(responseBodyJson, "error", responseBody).asText());
+                    .parseFrom(extractRequiredParameterText(responseBodyJson, "error", responseBody));
         } catch (IllegalArgumentException iaE) {
             //non oauth standard error code
             errorCode = null;
         }
 
-        final JsonNode errorDescription = responseBodyJson.get("error_description");
+        String errorDescription = null;
+        try {
+        	errorDescription = responseBodyJson.getString("error_description");
+		} catch(JSONException e) {}
 
-        throw new OAuth2AccessTokenErrorResponse(errorCode, errorDescription == null ? null : errorDescription.asText(),
+        throw new OAuth2AccessTokenErrorResponse(errorCode, errorDescription == null ? null : errorDescription,
                 errorUri, response);
     }
 
-    private OAuth2AccessToken createToken(String rawResponse) throws IOException {
+    private OAuth2AccessToken createToken(String rawResponse) throws IOException, JSONException {
 
-        final JsonNode response = OBJECT_MAPPER.readTree(rawResponse);
+    	final JSONTokener tokenizer = new JSONTokener(rawResponse);
+    	final JSONObject response = new JSONObject(tokenizer);
 
-        final JsonNode expiresInNode = response.get("expires_in");
-        final JsonNode refreshToken = response.get(OAuthConstants.REFRESH_TOKEN);
-        final JsonNode scope = response.get(OAuthConstants.SCOPE);
-        final JsonNode tokenType = response.get("token_type");
+    	Integer expiresInNode = null;
+    	String refreshToken = null;
+    	String scope = null;
+    	String tokenType = null;
+    	
+        try {
+        	expiresInNode = response.getInt("expires_in");
+		} catch(JSONException e) {}
+        try {
+        	refreshToken = response.getString(OAuthConstants.REFRESH_TOKEN);
+		} catch(JSONException e) {}
+        try {
+        	scope = response.getString(OAuthConstants.SCOPE);
+		} catch(JSONException e) {}
+        try {
+        	tokenType = response.getString("token_type");
+		} catch(JSONException e) {}
 
-        return createToken(extractRequiredParameter(response, OAuthConstants.ACCESS_TOKEN, rawResponse).asText(),
-                tokenType == null ? null : tokenType.asText(), expiresInNode == null ? null : expiresInNode.asInt(),
-                refreshToken == null ? null : refreshToken.asText(), scope == null ? null : scope.asText(), response,
+        return createToken(extractRequiredParameterText(response, OAuthConstants.ACCESS_TOKEN, rawResponse),
+                tokenType, expiresInNode,
+                refreshToken, scope, response,
                 rawResponse);
     }
 
     protected OAuth2AccessToken createToken(String accessToken, String tokenType, Integer expiresIn,
-            String refreshToken, String scope, JsonNode response, String rawResponse) {
+            String refreshToken, String scope, JSONObject response, String rawResponse) {
         return new OAuth2AccessToken(accessToken, tokenType, expiresIn, refreshToken, scope, rawResponse);
     }
 }

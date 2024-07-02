@@ -5,6 +5,7 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Token;
 
 import java.io.IOException;
+import org.json.JSONException;
 
 /**
  * Simple command object that extracts a concrete {@link Token} from a String
@@ -19,5 +20,5 @@ public interface TokenExtractor<T extends Token> {
      * @return OAuth access token
      * @throws java.io.IOException in case of troubles while getting body from the response
      */
-    T extract(Response response) throws IOException, OAuthException;
+    T extract(Response response) throws IOException, OAuthException, JSONException;
 }

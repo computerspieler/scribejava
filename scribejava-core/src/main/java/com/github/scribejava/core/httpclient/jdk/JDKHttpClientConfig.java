@@ -11,7 +11,7 @@ public class JDKHttpClientConfig implements HttpClientConfig {
     private boolean followRedirects = true;
     private Proxy proxy;
 
-    @Override
+    //@Override
     public JDKHttpClientConfig createDefaultConfig() {
         return defaultConfig();
     }

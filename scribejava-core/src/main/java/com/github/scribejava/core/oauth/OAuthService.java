@@ -13,7 +13,7 @@ import java.io.File;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ServiceLoader;
+import com.github.scribejava.core.utils.ServiceLoader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -51,7 +51,7 @@ public abstract class OAuthService implements Closeable {
         return null;
     }
 
-    @Override
+    //@Override
     public void close() throws IOException {
         httpClient.close();
     }

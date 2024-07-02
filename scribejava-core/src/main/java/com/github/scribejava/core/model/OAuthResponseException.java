@@ -2,7 +2,7 @@ package com.github.scribejava.core.model;
 
 import com.github.scribejava.core.exceptions.OAuthException;
 import java.io.IOException;
-import fr.speilkoun.util.Objects;
+import com.github.scribejava.core.utils.Objects;
 
 public class OAuthResponseException extends OAuthException {
 
@@ -19,14 +19,14 @@ public class OAuthResponseException extends OAuthException {
         return response;
     }
 
-    @Override
+    //@Override
     public int hashCode() {
         int hash = 5;
         hash = 29 * hash + Objects.hashCode(response);
         return hash;
     }
 
-    @Override
+    //@Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

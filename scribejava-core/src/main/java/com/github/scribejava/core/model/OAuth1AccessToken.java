@@ -1,6 +1,6 @@
 package com.github.scribejava.core.model;
 
-import fr.speilkoun.util.Objects;
+import com.github.scribejava.core.utils.Objects;
 
 /**
  * Represents an OAuth 1 Access Token http://tools.ietf.org/html/rfc5849#section-2.3
@@ -22,7 +22,7 @@ public class OAuth1AccessToken extends OAuth1Token {
      *
      * @return oauth_token
      */
-    @Override
+    //@Override
     public String getToken() {
         return super.getToken();
     }
@@ -32,12 +32,12 @@ public class OAuth1AccessToken extends OAuth1Token {
      *
      * @return oauth_token_secret
      */
-    @Override
+    //@Override
     public String getTokenSecret() {
         return super.getTokenSecret();
     }
 
-    @Override
+    //@Override
     public int hashCode() {
         int hash = 3;
         hash = 73 * hash + Objects.hashCode(getToken());
@@ -45,7 +45,7 @@ public class OAuth1AccessToken extends OAuth1Token {
         return hash;
     }
 
-    @Override
+    //@Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

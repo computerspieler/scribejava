@@ -31,27 +31,27 @@ public class ServiceBuilder implements ServiceBuilderOAuth10a, ServiceBuilderOAu
         apiKey(apiKey);
     }
 
-    @Override
+    //@Override
     public ServiceBuilder callback(String callback) {
         this.callback = callback;
         return this;
     }
 
-    @Override
+    //@Override
     public final ServiceBuilder apiKey(String apiKey) {
         Preconditions.checkEmptyString(apiKey, "Invalid Api key");
         this.apiKey = apiKey;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilder apiSecret(String apiSecret) {
         Preconditions.checkEmptyString(apiSecret, "Invalid Api secret");
         this.apiSecret = apiSecret;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilder apiSecretIsEmptyStringUnsafe() {
         apiSecret = "";
         return this;
@@ -63,66 +63,66 @@ public class ServiceBuilder implements ServiceBuilderOAuth10a, ServiceBuilderOAu
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilderOAuth20 defaultScope(String defaultScope) {
         return setScope(defaultScope);
     }
 
-    @Override
+    //@Override
     public ServiceBuilderOAuth20 defaultScope(ScopeBuilder scopeBuilder) {
         return setScope(scopeBuilder.build());
     }
 
-    @Override
+    //@Override
     public ServiceBuilderOAuth10a withScope(String scope) {
         return setScope(scope);
     }
 
-    @Override
+    //@Override
     public ServiceBuilder debugStream(OutputStream debugStream) {
         Preconditions.checkNotNull(debugStream, "debug stream can't be null");
         this.debugStream = debugStream;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilderOAuth20 responseType(String responseType) {
         Preconditions.checkEmptyString(responseType, "Invalid OAuth responseType");
         this.responseType = responseType;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilder httpClientConfig(HttpClientConfig httpClientConfig) {
         Preconditions.checkNotNull(httpClientConfig, "httpClientConfig can't be null");
         this.httpClientConfig = httpClientConfig;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilder httpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilder userAgent(String userAgent) {
         this.userAgent = userAgent;
         return this;
     }
 
-    @Override
+    //@Override
     public ServiceBuilder debug() {
         return debugStream(System.out);
     }
 
-    @Override
+    //@Override
     public OAuth10aService build(DefaultApi10a api) {
         return api.createService(apiKey, apiSecret, callback, scope, debugStream, userAgent, httpClientConfig,
                 httpClient);
     }
 
-    @Override
+    //@Override
     public OAuth20Service build(DefaultApi20 api) {
         return api.createService(apiKey, apiSecret, callback, scope, responseType, debugStream, userAgent,
                 httpClientConfig, httpClient);

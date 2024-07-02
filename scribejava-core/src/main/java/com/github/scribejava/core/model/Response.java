@@ -116,7 +116,7 @@ public class Response implements Closeable {
         return headers.get(name);
     }
 
-    @Override
+    //@Override
     public String toString() {
         return "Response{"
                 + "code=" + code
@@ -126,7 +126,7 @@ public class Response implements Closeable {
                 + '}';
     }
 
-    @Override
+    //@Override
     public void close() throws IOException {
         if (closed) {
             return;

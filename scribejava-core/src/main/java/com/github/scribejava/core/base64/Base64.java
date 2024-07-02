@@ -19,17 +19,8 @@ public abstract class Base64 {
     }
 
     private static Base64 createInstance() {
-        if (Java8Base64.isAvailable()) {
-            return new Java8Base64();
-        }
         if (Jaxb230Base64.isAvailable()) {
             return new Jaxb230Base64();
-        }
-        if (JaxbBase64.isAvailable()) {
-            return new JaxbBase64();
-        }
-        if (CommonsCodecBase64.isAvailable()) {
-            return new CommonsCodecBase64();
         }
         throw new IllegalStateException(
                 "No Base64 implementation was provided. Java 8 Base64, Apache Commons Codec or JAXB is needed");

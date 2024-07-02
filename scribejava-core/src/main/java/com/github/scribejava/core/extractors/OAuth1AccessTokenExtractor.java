@@ -16,7 +16,7 @@ public class OAuth1AccessTokenExtractor extends AbstractOAuth1TokenExtractor<OAu
         return InstanceHolder.INSTANCE;
     }
 
-    @Override
+    //@Override
     protected OAuth1AccessToken createToken(String token, String secret, String response) {
         return new OAuth1AccessToken(token, secret, response);
     }

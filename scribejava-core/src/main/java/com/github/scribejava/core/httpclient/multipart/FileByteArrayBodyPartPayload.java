@@ -68,7 +68,7 @@ public class FileByteArrayBodyPartPayload extends ByteArrayBodyPartPayload {
         if (contentType == null) {
             return Collections.singletonMap("Content-Disposition", contentDispositionHeader);
         } else {
-            final Map<String, String> headers = new HashMap();
+            final Map<String, String> headers = new HashMap<String, String>();
             headers.put(HttpClient.CONTENT_TYPE, contentType);
             headers.put("Content-Disposition", contentDispositionHeader);
             return headers;

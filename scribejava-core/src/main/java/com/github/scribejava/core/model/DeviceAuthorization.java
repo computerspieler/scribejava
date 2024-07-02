@@ -91,7 +91,7 @@ public class DeviceAuthorization {
         return intervalSeconds;
     }
 
-    @Override
+    //@Override
     public String toString() {
         return "DeviceAuthorization{"
                 + "'deviceCode'='" + deviceCode

@@ -24,7 +24,7 @@ public abstract class AbstractOAuth1TokenExtractor<T extends OAuth1Token> implem
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public T extract(Response response) throws IOException {
         final String body = response.getBody();
         Preconditions.checkEmptyString(body,

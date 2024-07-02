@@ -1,7 +1,7 @@
 package com.github.scribejava.core.model;
 
 import com.github.scribejava.core.utils.Preconditions;
-import fr.speilkoun.util.Objects;
+import com.github.scribejava.core.utils.Objects;
 
 /**
  * Represents an OAuth 2 Access token.
@@ -92,7 +92,7 @@ public class OAuth2AccessToken extends Token {
         return scope;
     }
 
-    @Override
+    //@Override
     public int hashCode() {
         int hash = 7;
         hash = 41 * hash + Objects.hashCode(accessToken);
@@ -103,7 +103,7 @@ public class OAuth2AccessToken extends Token {
         return hash;
     }
 
-    @Override
+    //@Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

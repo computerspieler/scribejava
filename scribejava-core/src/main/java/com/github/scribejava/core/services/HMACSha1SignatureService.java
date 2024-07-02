@@ -24,7 +24,7 @@ public class HMACSha1SignatureService implements SignatureService {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String getSignature(String baseString, String apiSecret, String tokenSecret) {
         try {
             Preconditions.checkEmptyString(baseString, "Base string can't be null or empty string");
@@ -53,7 +53,7 @@ public class HMACSha1SignatureService implements SignatureService {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String getSignatureMethod() {
         return METHOD;
     }

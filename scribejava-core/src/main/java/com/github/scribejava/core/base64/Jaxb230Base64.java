@@ -1,18 +1,18 @@
 package com.github.scribejava.core.base64;
 
-import javax.xml.bind.DatatypeConverter;
+import com.github.scribejava.core.utils.DatatypeConverter;
 
 /**
  * JAXB v2.3.0 (the latest for JRE 7)
  */
 public class Jaxb230Base64 extends Base64 {
 
-    @Override
+    //@Override
     protected String internalEncode(byte[] bytes) {
         return DatatypeConverter.printBase64Binary(bytes);
     }
 
-    @Override
+    //@Override
     protected String internalEncodeUrlWithoutPadding(byte[] bytes) {
         String string = DatatypeConverter.printBase64Binary(bytes);
         while (string.endsWith("=")) {

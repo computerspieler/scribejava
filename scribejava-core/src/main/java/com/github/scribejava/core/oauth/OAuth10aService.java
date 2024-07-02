@@ -15,6 +15,7 @@ import com.github.scribejava.core.model.Response;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import org.json.JSONException;
 
 /**
  * OAuth 1.0a implementation of {@link OAuthService}
@@ -32,7 +33,7 @@ public class OAuth10aService extends OAuthService {
         this.scope = scope;
     }
 
-    public OAuth1RequestToken getRequestToken() throws IOException, InterruptedException, ExecutionException {
+    public OAuth1RequestToken getRequestToken() throws IOException, InterruptedException, ExecutionException, JSONException {
         if (isDebug()) {
             log("obtaining request token from %s", api.getRequestTokenEndpoint());
         }
@@ -62,8 +63,8 @@ public class OAuth10aService extends OAuthService {
         }
         final OAuthRequest request = prepareRequestTokenRequest();
         return execute(request, callback, new OAuthRequest.ResponseConverter<OAuth1RequestToken>() {
-            @Override
-            public OAuth1RequestToken convert(Response response) throws IOException {
+            //@Override
+            public OAuth1RequestToken convert(Response response) throws IOException, JSONException {
                 final OAuth1RequestToken token = getApi().getRequestTokenExtractor().extract(response);
                 response.close();
                 return token;
@@ -103,7 +104,7 @@ public class OAuth10aService extends OAuthService {
     }
 
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
-            throws IOException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException, JSONException {
         if (isDebug()) {
             log("obtaining access token from %s", api.getAccessTokenEndpoint());
         }
@@ -136,8 +137,8 @@ public class OAuth10aService extends OAuthService {
         }
         final OAuthRequest request = prepareAccessTokenRequest(requestToken, oauthVerifier);
         return execute(request, callback, new OAuthRequest.ResponseConverter<OAuth1AccessToken>() {
-            @Override
-            public OAuth1AccessToken convert(Response response) throws IOException {
+            //@Override
+            public OAuth1AccessToken convert(Response response) throws IOException, JSONException {
                 final OAuth1AccessToken token = getApi().getAccessTokenExtractor().extract(response);
                 response.close();
                 return token;
@@ -172,7 +173,7 @@ public class OAuth10aService extends OAuthService {
         appendSignature(request);
     }
 
-    @Override
+    //@Override
     public String getVersion() {
         return VERSION;
     }

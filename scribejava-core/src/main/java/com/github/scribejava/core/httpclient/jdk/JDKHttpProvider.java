@@ -6,7 +6,7 @@ import com.github.scribejava.core.httpclient.HttpClientProvider;
 
 public class JDKHttpProvider implements HttpClientProvider {
 
-    @Override
+    //@Override
     public HttpClient createClient(HttpClientConfig config) {
         if (config instanceof JDKHttpClientConfig) {
             return new JDKHttpClient((JDKHttpClientConfig) config);

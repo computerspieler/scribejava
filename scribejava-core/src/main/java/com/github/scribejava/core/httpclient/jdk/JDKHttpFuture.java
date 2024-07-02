@@ -29,22 +29,22 @@ public class JDKHttpFuture<V> implements Future<V> {
         this.exception = exception;
     }
 
-    @Override
+    //@Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isCancelled() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean isDone() {
         return true;
     }
 
-    @Override
+    //@Override
     public V get() throws InterruptedException, ExecutionException {
         if (exception != null) {
             throw new ExecutionException(exception);
@@ -53,7 +53,7 @@ public class JDKHttpFuture<V> implements Future<V> {
         return response;
     }
 
-    @Override
+    //@Override
     public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return get();
     }

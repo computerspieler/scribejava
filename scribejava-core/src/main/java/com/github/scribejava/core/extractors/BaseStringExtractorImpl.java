@@ -17,7 +17,7 @@ public class BaseStringExtractorImpl implements BaseStringExtractor {
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public String extract(OAuthRequest request) {
         checkPreconditions(request);
         final String verb = OAuthEncoder.encode(getVerb(request));

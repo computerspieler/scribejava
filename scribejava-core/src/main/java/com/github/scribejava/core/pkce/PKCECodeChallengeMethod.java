@@ -7,18 +7,31 @@ import java.security.NoSuchAlgorithmException;
 
 public enum PKCECodeChallengeMethod {
     S256 {
-        @Override
+        //@Override
         public String transform2CodeChallenge(String codeVerifier) throws NoSuchAlgorithmException {
             return Base64.encodeUrlWithoutPadding(
-                    MessageDigest.getInstance("SHA-256").digest(codeVerifier.getBytes(Charset.forName("US-ASCII"))));
+                    MessageDigest.getInstance("SHA-256").digest(Charset.forName("US-ASCII").encode(codeVerifier).array()));
         }
+
+        //@Override
+		public String getName()
+		{
+			return "S256";
+		}
     },
     PLAIN {
-        @Override
+        //@Override
         public String transform2CodeChallenge(String codeVerifier) {
             return codeVerifier;
         }
+
+        //@Override
+		public String getName()
+		{
+			return "plain";
+		}
     };
 
     public abstract String transform2CodeChallenge(String codeVerifier) throws NoSuchAlgorithmException;
+	public abstract String getName();
 }

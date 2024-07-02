@@ -8,31 +8,31 @@ import java.io.OutputStream;
 
 public interface ServiceBuilderOAuth20 extends ServiceBuilderCommon {
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 callback(String callback);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 apiKey(String apiKey);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 apiSecret(String apiSecret);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 apiSecretIsEmptyStringUnsafe();
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 httpClientConfig(HttpClientConfig httpClientConfig);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 httpClient(HttpClient httpClient);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 userAgent(String userAgent);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 debugStream(OutputStream debugStream);
 
-    @Override
+    //@Override
     ServiceBuilderOAuth20 debug();
 
     ServiceBuilderOAuth20 responseType(String responseType);
